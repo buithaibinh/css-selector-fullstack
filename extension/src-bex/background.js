@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
 import { bexBackground } from 'quasar/wrappers';
 
@@ -50,7 +51,22 @@ export default bexBackground((/* , allActiveConnections */) => {
   };
 
   // eslint-disable-next-line no-unused-vars
-  chrome.action.onClicked.addListener(async ({ id: tab_id }) => {
+  chrome.action.onClicked.addListener(async ({ id: tab_id, url }) => {
+    console.log('clicked', tab_id, url);
     toggleIn({ id: tab_id });
+  });
+
+  // chrome.webNavigation.onCompleted.addListener((details) => {
+  //   console.log('webNavigation.onCompleted', details);
+  // }, {});
+  chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    console.log('onUpdated', tabId, changeInfo, tab);
+
+    const url = new URL(tab.url);
+    const action = url.searchParams.get('action');
+    if (action === 'pick-css-selector') {
+      console.log('complete', tabId, tab.url);
+      toggleIn({ id: tabId });
+    }
   });
 });

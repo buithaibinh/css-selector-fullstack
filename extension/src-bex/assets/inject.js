@@ -1,10 +1,12 @@
+/* eslint-disable no-var */
+/* eslint-disable vars-on-top */
 console.log('Hello from inject.js');
-const script = document.createElement('script');
+var script = document.createElement('script');
 script.type = 'module';
 script.src = chrome.runtime.getURL('assets/bundle.min.js');
 document.body.appendChild(script);
 
-const selector = document.createElement('css-selector');
+var selector = document.createElement('css-selector');
 selector.setAttribute('id', 'css-selector');
 
 document.body.prepend(selector);
