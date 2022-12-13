@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + Vue 3.2 + Web Component</title>
+  </head>
+
+  <body>
+    <h1>Vite + Vue 3 + Typescript + Web Component</h1>
+    <css-selector id="selector"></css-selector>
+    <script type="module" src="/src/main.ts"></script>
+
+    <div id="binhb">this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+    <div>this is a div element</div>
+
+    <button>Click</button>
+
+    <script>
+      // listen for click events on the button
+      document.querySelector('button').addEventListener('click', () => {
+        console.log('clicked');
+        const el = document.getElementById('selector');
+        el._instance.exposed.test();
+      });
+    </script>
+  </body>
+</html>
