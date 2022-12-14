@@ -56,9 +56,6 @@ export default bexBackground((/* , allActiveConnections */) => {
     toggleIn({ id: tab_id });
   });
 
-  // chrome.webNavigation.onCompleted.addListener((details) => {
-  //   console.log('webNavigation.onCompleted', details);
-  // }, {});
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     console.log('onUpdated', tabId, changeInfo, tab);
 

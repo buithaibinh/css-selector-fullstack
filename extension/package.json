@@ -1,6 +1,6 @@
 {
   "name": "css-selector",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "A chrome extension to help you find the css selector of an element.",
   "productName": "CSS Selector",
   "author": "Binh Bui <buithaibinh@gmail.com>",

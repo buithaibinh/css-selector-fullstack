@@ -39,7 +39,15 @@ const disable = () => {
 };
 
 const copyToClipboard = (text: string) => {
-  navigator.clipboard.writeText(text);
+  const textArea = document.createElement('textarea');
+  textArea.className = 'fixed-top';
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  document.execCommand('copy');
+  document.body.removeChild(textArea);
 };
 
 const deepElementFromPoint = (x: number, y: number) => {
