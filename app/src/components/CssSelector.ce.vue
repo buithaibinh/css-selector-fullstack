@@ -16,8 +16,13 @@ const selector = ref<HTMLElement | null>(null);
 const message = ref<string | null>('');
 const title = ref<string | null>('CSS Selector is enabled');
 
-// current element
-const currentElement = ref<HTMLElement | null>(null);
+const holdCtrl = ref<boolean>(false);
+
+// current element on hover
+const overElement = ref<HTMLElement | null>(null);
+
+// selected elements
+const selectedElements = ref<HTMLElement[]>([]);
 
 // enable css selector
 const enable = () => {
@@ -68,26 +73,62 @@ const on_unhover = () => {
   hideGridLines();
 };
 
+const showCssSelectors = () => {
+  selectedElements.value.forEach((element) => {
+    element.style.outline = 'rgb(, 0,0 ) 2px solid';
+  });
+
+  const paths = selectedElements.value.map((element) => {
+    return finder(element);
+  });
+  if (paths.length > 0) {
+    const path = `[CSS Selector]${paths.join(', ')}`;
+    copyToClipboard(path);
+
+    title.value = 'Copied to clipboard';
+    message.value = path.replace('[CSS Selector]', '');
+  }
+};
+
 const on_click = (e: any) => {
   // stop propagation
   e.preventDefault();
   e.stopPropagation();
 
+  // if user doest not keep ctrl, we need to clear the selected elements
+  if (!holdCtrl.value) {
+    selectedElements.value.forEach((element) => {
+      element.style.outline = 'none';
+    });
+    selectedElements.value = [];
+  }
+
   const target = deepElementFromPoint(e.clientX, e.clientY);
+  // if target is same as  overElement, we need to add it to selectedElements
+  if (target === overElement.value) {
+    // if the user keep ctrl, we need to remove the element from selectedElements
+    if (holdCtrl.value) {
+      const index = selectedElements.value.indexOf(target);
+      if (index > -1) {
+        selectedElements.value.splice(index, 1);
+      } else {
+        selectedElements.value.push(target);
+      }
+    } else {
+      selectedElements.value = [target];
+    }
 
-  if (target === currentElement.value) {
-    const path = finder(target);
-    copyToClipboard(path);
-
-    title.value = 'Copied to clipboard';
-    message.value = path;
+    showCssSelectors();
   }
 };
 
 const hideGridLines = () => {
   // remove outline from current element
-  if (currentElement.value) {
-    currentElement.value.style.outline = '';
+  if (overElement.value) {
+    // if element is not in selectedElements, we need to remove the outline
+    if (!selectedElements.value.includes(overElement.value)) {
+      overElement.value.style.outline = 'none';
+    }
   }
 };
 
@@ -95,9 +136,29 @@ const showGridLines = (target: any) => {
   // If the target is not a node, we don't need to show the gridlines
   if (!target) return;
   // outline the element
-  target.style.outline = 'rgb(255, 0,0 ) 1px solid';
+  target.style.outline = 'rgb(255, 0,0 ) 2px solid';
   // set the current element
-  currentElement.value = target;
+  overElement.value = target;
+};
+
+const handleKeyDown = (e: any) => {
+  if (e.key === 'Control') {
+    holdCtrl.value = true;
+  }
+
+  if (e.key === 'Meta') {
+    holdCtrl.value = true;
+  }
+};
+
+const handleKeyUp = (e: any) => {
+  if (e.key === 'Control') {
+    holdCtrl.value = false;
+  }
+
+  if (e.key === 'Meta') {
+    holdCtrl.value = false;
+  }
 };
 
 // listen event when mounted
@@ -111,6 +172,10 @@ onMounted(() => {
 
   // listen window scroll event
   window.addEventListener('scroll', hideGridLines);
+
+  // handle ctrl key
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
 });
 
 // remove event when unmounted
@@ -119,6 +184,9 @@ onUnmounted(() => {
   document.body.removeEventListener('mouseout', on_unhover);
   document.body.removeEventListener('click', on_click);
   window.removeEventListener('scroll', hideGridLines);
+
+  document.removeEventListener('keydown', handleKeyDown);
+  document.removeEventListener('keyup', handleKeyUp);
 });
 
 // export some methods to use in other components
@@ -131,7 +199,6 @@ defineExpose({
   disable,
   test
 });
-
 </script>
 
 <style scoped>
