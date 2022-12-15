@@ -43,7 +43,6 @@ const copyToClipboard = (text: string) => {
   textArea.className = 'fixed-top';
   textArea.value = text;
   document.body.appendChild(textArea);
-  textArea.focus();
   textArea.select();
 
   document.execCommand('copy');
