@@ -82,7 +82,10 @@ const on_unhover = () => {
 
 const showCssSelectors = () => {
   selectedElements.value.forEach((element) => {
-    element.style.outline = 'rgb(, 0,0 ) 2px solid';
+    element.style.outline = 'rgb(255, 0,0 ) 4px solid';
+
+    // background color opacity 0.5
+    element.style.background = 'rgba(255, 0, 0, 0.3)';
   });
 
   const paths = selectedElements.value.map((element) => {
@@ -106,6 +109,9 @@ const on_click = (e: any) => {
   if (!holdCtrl.value) {
     selectedElements.value.forEach((element) => {
       element.style.outline = 'none';
+
+      // remove background color
+      element.style.background = 'none';
     });
     selectedElements.value = [];
   }
@@ -221,6 +227,7 @@ defineExpose({
   font-family: sans-serif;
   border: 1px solid #eee;
   color: white;
+  max-width: 400px;
 }
 
 .css-selector__selector__title {
